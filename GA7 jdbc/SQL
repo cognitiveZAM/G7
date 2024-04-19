@@ -1,0 +1,48 @@
+CREATE TABLE IF NOT EXISTS public."Mesa"
+(
+    "Numero_mesa" integer NOT NULL,
+    "Cantidad_clientes" integer,
+    CONSTRAINT "Mesa_pkey" PRIMARY KEY ("Numero_mesa")
+);
+
+-- Insertar algunos datos de ejemplo
+INSERT INTO public."Mesa" ("Numero_mesa", "Cantidad_clientes") VALUES 
+(1, 4),
+(2, 6),
+(3, 2);
+CREATE TABLE IF NOT EXISTS public."Pedido"
+(
+    "id_Pedido" serial NOT NULL,
+    "Numero_mesa" integer,
+    coctel character varying(25) COLLATE pg_catalog."default",
+    cantidad integer,
+    precio_unitario numeric,
+    precio_total numeric,
+    CONSTRAINT "Pedido_pkey" PRIMARY KEY ("id_Pedido"),
+    CONSTRAINT "Numero_mesa" FOREIGN KEY ("Numero_mesa")
+        REFERENCES public."Mesa" ("Numero_mesa") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+-- Insertar algunos datos de ejemplo
+INSERT INTO public."Pedido" ("Numero_mesa", coctel, cantidad, precio_unitario, precio_total) VALUES 
+(1, 'Mojito', 2, 8000, 16000),
+(2, 'Piña Colada', 1, 10000, 10000),
+(3, 'Margarita', 3, 7500, 22500);
+CREATE TABLE IF NOT EXISTS public."Solicitud_Barra"
+(
+    id_solicitud serial NOT NULL,
+    "id_Pedido" integer NOT NULL,
+    coctel character varying(25) COLLATE pg_catalog."default",
+    cantidad integer,
+    precio_unitario numeric,
+    precio_total numeric,
+    CONSTRAINT "Solicitud_Barra_pkey" PRIMARY KEY (id_solicitud),
+    CONSTRAINT "id_Pedido" FOREIGN KEY ("id_Pedido")
+        REFERENCES public."Pedido" ("id_Pedido") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
